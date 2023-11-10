@@ -18,29 +18,34 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Users
-        User::factory(1)->create();
+        // Create a single user with predefined credentials.
+        $user = User::factory()->createOne([
+            'name' => 'Valou Test',
+            'email' => 'houvillev@gmail.com',
+            'password' => bcrypt('admin2222'),
+        ]);
 
-        // Create  Categories
-        Category::factory(5)->create();
+        // Create three categories and associate them with the created user.
+        // The 'for' method sets the foreign key on the related model.
+        $categories = Category::factory()->count(3)->for($user)->create();
 
-        // Create Tags
-        Tag::factory(20)->create();
+        // Iterate over each category to create articles.
+        $categories->each(function ($category) use ($user) {
+            // Create 10 articles for each category, associating them with the category and the user.
+            $articles = Article::factory(10)->create([
+                'category_id' => $category->id,
+                'user_id' => $user->id,
+            ]);
 
-
-        Article::factory(20)->create()->each(function ($article) {
-            // Generate random number of tag for each articles
-            $numTags = random_int(1, 5);
-            // Create tags and get their id with pluck
-            $tagsIds = Tag::factory()->count($numTags)->create()->pluck('id');
-            // Associate tags to the article in the pivot table
-            $article->tags()->attach($tagsIds);
+            // Iterate over each article to associate tags.
+            $articles->each(function ($article) {
+                // Attach 3 tags to each article. Tags are created here and associated with the user.
+                // The 'pluck' method collects the IDs of the created tags to be used in the 'attach' method.
+                $article->tags()->attach(
+                    Tag::factory()->count(3)->create(['user_id' => $article->user_id])->pluck('id')
+                );
+            });
         });
-
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
+
 }
