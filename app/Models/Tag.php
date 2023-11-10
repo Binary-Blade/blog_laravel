@@ -11,6 +11,10 @@ class Tag extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name', 'user_id'
+    ];
+
     /**
      * The articles that belong to the tag.
      *
