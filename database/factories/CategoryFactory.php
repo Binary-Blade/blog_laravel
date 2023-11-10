@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,6 +22,7 @@ class CategoryFactory extends Factory
         $createdAt = fake()->dateTimeBetween('-2 years');
         return [
             'name' => fake()->sentence(1),
+            'user_id' => User::factory(),
             'created_at' => $createdAt,
             'updated_at'=>fake()->dateTimeBetween($createdAt, 'now'),
         ];
