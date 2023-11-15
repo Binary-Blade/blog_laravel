@@ -17,7 +17,8 @@ class CategoryController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-       return CategoryResource::collection(Category::all());
+       return CategoryResource::collection(
+           Category::with('articles', 'user')->paginate());
     }
 
     /**
@@ -39,6 +40,7 @@ class CategoryController extends Controller
      */
     public function show( Category $category): CategoryResource
     {
+        $category->load('articles');
         return new CategoryResource($category);
     }
 
