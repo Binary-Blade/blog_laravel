@@ -3,18 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TagResource;
 use App\Models\Tag;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TagController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): Collection
+    public function index(): AnonymousResourceCollection
     {
-        return Tag::all();
+        return TagResource::collection(Tag::all());
     }
 
     /**
@@ -27,26 +29,26 @@ class TagController extends Controller
         ]);
         $validateData['user_id'] = 1;
 
-        return Tag::create($validateData);
+        return new TagResource(Tag::create($validateData));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Tag $tag): Tag
+    public function show(Tag $tag): TagResource
     {
-        return $tag;
+        return new TagResource($tag);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tag $tag): Tag
+    public function update(Request $request, Tag $tag): TagResource
     {
         $tag->update($request->validate([
             "name" => "sometimes|string|max:100"
         ]));
-        return $tag;
+        return new TagResource($tag);
 
     }
 
