@@ -10,9 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Article extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'title', 'full_text', 'user_id', 'category_id'
-    ];
+    protected $fillable = ['title', 'user_id', 'category_id', 'full_text', 'image_path'];
     /**
      * Get the user that authored the article.
      *
