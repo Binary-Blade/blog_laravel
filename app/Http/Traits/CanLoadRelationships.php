@@ -21,14 +21,17 @@ trait CanLoadRelationships
      * @param array|null $relations List of potential relationships to load.
      * @return Model|EloquentBuilder|QueryBuilder The model or query builder with loaded relationships.
      */
-    public function loadRelationships(Model|QueryBuilder|EloquentBuilder $for, ?array $relations): Model|EloquentBuilder|QueryBuilder
+    public function loadRelationships(
+        Model|QueryBuilder|EloquentBuilder $for,
+        ?array $relations = null
+    ): Model|EloquentBuilder|QueryBuilder
     {
-        $relations = $relations ?? $this->$relations ?? [];
+        $relations = $relations ?? $this->relations ?? [];
         foreach ($relations as $relation) {
             // Conditionally load each relation based on request parameters
             $for->when(
                 $this->shouldIncludeRelation($relation),
-                fn($queries) => $for instanceof Model ? $queries->load($relation) : $queries->with($relation)
+                fn($queries) => $for instanceof Model ? $for->load($relation) : $queries->with($relation)
             );
         }
         return $for;
