@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ArticleResource;
+use App\Http\Traits\CanLoadRelationships;
 use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -18,6 +19,9 @@ use Illuminate\Http\Response;
  */
 class ArticleController extends Controller
 {
+    use CanLoadRelationships;
+
+    protected array $relations = ['tags', 'user'];
     /**
      * Display a listing of articles for a given category.
      *
@@ -27,7 +31,9 @@ class ArticleController extends Controller
     public function index(Category $category): AnonymousResourceCollection
     {
         // Retrieve latest articles for the given category
-        $articles = $category->articles()->latest();
+        $articles = $this->loadRelationships(
+            $category->articles()->latest()
+            );
 
         // Return paginated collection of articles
         return ArticleResource::collection(
@@ -53,9 +59,10 @@ class ArticleController extends Controller
         // Manually setting the user_id and category_id for the article
         $validatedData['user_id'] = 1;
         $validatedData['category_id'] = $request->route('category');
+        $articles = Article::create($validatedData);
 
         // Create and return the new article
-        return new ArticleResource(Article::create($validatedData));
+        return new ArticleResource($this->loadRelationships($articles));
     }
 
     /**
@@ -68,8 +75,7 @@ class ArticleController extends Controller
     public function show(Category $category, Article $article): ArticleResource
     {
         // Load related user data for the article
-        $article->load('user');
-        return new ArticleResource($article);
+        return new ArticleResource($this->loadRelationships($article));
     }
 
     /**
@@ -78,9 +84,9 @@ class ArticleController extends Controller
      * @param Request $request The request object containing the updated data.
      * @param Category $category The category of the article.
      * @param Article $article The article to update.
-     * @return Article The updated Article object.
+     * @return ArticleResource The updated Article object.
      */
-    public function update(Request $request, Category $category, Article $article): Article
+    public function update(Request $request, Category $category, Article $article): ArticleResource
     {
         // Validate the request data and update the article
         $article->update($request->validate([
@@ -88,7 +94,7 @@ class ArticleController extends Controller
             "full_text" => 'nullable|string',
             "image_path" => 'nullable|image',
         ]));
-        return $article;
+        return new ArticleResource($this->loadRelationships($article));
     }
 
     /**
