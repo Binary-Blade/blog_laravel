@@ -17,8 +17,29 @@ class CategoryController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
+        $query = Category::query();
+        $relations = ['user', 'articles','articles.user'];
+
+        foreach ($relations as $relation){
+            $query->when(
+                $this->shouldIncludeRelation($relation),
+                fn($queries) => $queries->with($relation)
+            );
+        }
+
        return CategoryResource::collection(
-           Category::with('articles', 'user')->paginate());
+           $query->latest()->paginate());
+    }
+
+    protected function shouldIncludeRelation (string $relation): bool
+    {
+        $include =  \request()->query('include');
+        if(!$include) {
+            return false;
+        }
+        $relations = array_map('trim',explode(',', $include));
+
+        return in_array($relation, $relations);
     }
 
     /**
