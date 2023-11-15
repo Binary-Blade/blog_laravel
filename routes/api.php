@@ -25,7 +25,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::apiResource('categories', CategoryController::class)
     ->only(['index', 'show']);
 Route::apiResource('categories.articles', ArticleController::class)
-    ->scoped(['articles' => 'id'])->only(['index', 'show']);
+    ->scoped()->only(['index', 'show']);
 Route::apiResource('tags', TagController::class)
     ->only(['index', 'show']);
 
