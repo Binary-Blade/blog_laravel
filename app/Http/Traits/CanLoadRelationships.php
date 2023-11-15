@@ -18,11 +18,12 @@ trait CanLoadRelationships
      * Dynamically load relationships on a model or query builder.
      *
      * @param Model|QueryBuilder|EloquentBuilder $for The model or query builder to load relationships on.
-     * @param array $relations List of potential relationships to load.
+     * @param array|null $relations List of potential relationships to load.
      * @return Model|EloquentBuilder|QueryBuilder The model or query builder with loaded relationships.
      */
-    public function loadRelationships(Model|QueryBuilder|EloquentBuilder $for, array $relations): Model|EloquentBuilder|QueryBuilder
+    public function loadRelationships(Model|QueryBuilder|EloquentBuilder $for, ?array $relations): Model|EloquentBuilder|QueryBuilder
     {
+        $relations = $relations ?? $this->$relations ?? [];
         foreach ($relations as $relation) {
             // Conditionally load each relation based on request parameters
             $for->when(
