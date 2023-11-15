@@ -25,17 +25,17 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::apiResource('categories', CategoryController::class)
     ->only(['index', 'show']);
 Route::apiResource('categories.articles', ArticleController::class)
-    ->scoped(['articles' => 'categories'])->only(['index', 'show']);
+    ->scoped(['articles' => 'id'])->only(['index', 'show']);
 Route::apiResource('tags', TagController::class)
     ->only(['index', 'show']);
 
 // Protected routes for content management (store, update, destroy)
-Route::middleware('auth:api')->group(function () {
+//Route::middleware('auth:api')->group(function () {
     Route::apiResource('categories', CategoryController::class)
         ->except(['index', 'show']);
     Route::apiResource('categories.articles', ArticleController::class)
         ->except(['index', 'show']);
     Route::apiResource('tags', TagController::class)
         ->except(['index', 'show']);
-});
+//});
 
