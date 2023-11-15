@@ -44,15 +44,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request): CategoryResource
     {
-        // Validate and retrieve the request data
-        $category = Category::create([
-            $request->validate([
+        // Validate the request data
+        $validatedData = $request->validate([
             "name" => "required|string|max:50",
-        ]),
-            'user_id' => 1,
         ]);
-
-        // Create and return the new category
+        // Add the user_id to the validated data array
+        $validatedData['user_id'] = 1;
+        // Create the category with the merged data
+        $category = Category::create($validatedData);
+        // Return the new category as a resource
         return new CategoryResource($this->loadRelationships($category));
     }
 
