@@ -3,26 +3,28 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ArticleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): Collection
+    public function index(): AnonymousResourceCollection
     {
-        return Article::all();
+        return ArticleResource::collection(Article::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): ArticleResource
     {
         $validatedData = $request->validate([
             "title" => 'required|string|max:50',
@@ -33,15 +35,15 @@ class ArticleController extends Controller
         $validatedData['user_id'] = 1;
         $validatedData['category_id'] = $request->route('category');
 
-        return Article::create($validatedData);
+        return new ArticleResource(Article::create($validatedData));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Category $category, Article $article): Article
+    public function show(Category $category, Article $article): ArticleResource
     {
-        return $article;
+        return new ArticleResource($article);
     }
 
     /**
