@@ -19,7 +19,7 @@ class CategoryController extends Controller
 {
     use CanLoadRelationships;
 
-    protected array $relations = ['user', 'articles', 'articles.user', 'articles.tags'];
+    protected array $relations = ['user','articles.user', 'articles', 'articles.tags'];
     /**
      * Display a listing of the resource.
      *
