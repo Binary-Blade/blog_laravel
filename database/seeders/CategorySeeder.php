@@ -17,7 +17,7 @@ class CategorySeeder extends Seeder
         $users = User::all();
 
         foreach ($users as $user) {
-            Category::factory()->count(3)->create(['user_id' => $user->id]);
+            Category::factory()->count(6)->create(['user_id' => $user->id]);
         }
     }
 }
