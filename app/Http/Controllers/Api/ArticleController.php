@@ -16,9 +16,12 @@ class ArticleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Category $category): AnonymousResourceCollection
     {
-        return ArticleResource::collection(Article::all());
+        $articles = $category->articles()->latest();
+        return ArticleResource::collection(
+            $articles->paginate());
+        //return ArticleResource::collection(Article::with('user', 'tags')->get());
     }
 
     /**
@@ -43,6 +46,7 @@ class ArticleController extends Controller
      */
     public function show(Category $category, Article $article): ArticleResource
     {
+        $article->load('user');
         return new ArticleResource($article);
     }
 
