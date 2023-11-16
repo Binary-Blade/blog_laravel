@@ -18,11 +18,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * This route is protected by Sanctum and returns the authenticated user.
+ */
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Public Access for all users
+/**
+ * These routes provide public access for all users.
+ * They allow users to view categories, articles, and tags.
+ */
 Route::apiResource('categories', CategoryController::class)
     ->only(['index', 'show']);
 Route::apiResource('categories.articles', ArticleController::class)
@@ -30,8 +36,16 @@ Route::apiResource('categories.articles', ArticleController::class)
 Route::apiResource('tags', TagController::class)
     ->only(['index', 'show']);
 
+/**
+ * This route is used for user authentication.
+ * It should be outside of the Sanctum middleware group to allow unauthenticated users to login.
+ */
 Route::post('login', [AuthController::class, 'login']);
-// Protected routes for content management (store, update, destroy)
+
+/**
+ * These routes are protected by Sanctum and provide content management (store, update, destroy).
+ * They allow authenticated users to perform these operations on categories, articles, and tags.
+ */
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('categories', CategoryController::class)
         ->except(['index', 'show']);
