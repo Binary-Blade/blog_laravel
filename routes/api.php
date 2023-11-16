@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ArticleController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\TagController;
 use Illuminate\Http\Request;
@@ -29,13 +30,13 @@ Route::apiResource('categories.articles', ArticleController::class)
 Route::apiResource('tags', TagController::class)
     ->only(['index', 'show']);
 
+Route::post('login', [AuthController::class, 'login']);
 // Protected routes for content management (store, update, destroy)
-//Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('categories', CategoryController::class)
         ->except(['index', 'show']);
     Route::apiResource('categories.articles', ArticleController::class)
         ->except(['index', 'show']);
     Route::apiResource('tags', TagController::class)
         ->except(['index', 'show']);
-//});
-
+});
