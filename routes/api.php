@@ -38,7 +38,7 @@ Route::apiResource('tags', TagController::class)
 
 /**
  * This route is used for user authentication.
- * It should be outside of the Sanctum middleware group to allow unauthenticated users to login.
+ * It should be outside the Sanctum middleware group to allow unauthenticated users to login.
  */
 Route::post('login', [AuthController::class, 'login']);
 
