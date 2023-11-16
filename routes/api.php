@@ -19,15 +19,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 /**
- * This route is protected by Sanctum and returns the authenticated user.
+ * Protected route to get the authenticated user's details.
+ * Requires a valid Sanctum token.
  */
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
 /**
- * These routes provide public access for all users.
- * They allow users to view categories, articles, and tags.
+ * Public routes for general access.
+ * These routes allow all users to view categories, articles, and tags without authentication.
  */
 Route::apiResource('categories', CategoryController::class)
     ->only(['index', 'show']);
@@ -37,14 +38,15 @@ Route::apiResource('tags', TagController::class)
     ->only(['index', 'show']);
 
 /**
- * This route is used for user authentication.
- * It should be outside the Sanctum middleware group to allow unauthenticated users to login.
+ * Public route for user authentication.
+ * Allows users to log in, receiving a Sanctum token for authenticated actions.
  */
 Route::post('login', [AuthController::class, 'login']);
 
 /**
- * These routes are protected by Sanctum and provide content management (store, update, destroy).
- * They allow authenticated users to perform these operations on categories, articles, and tags.
+ * Protected routes for content management.
+ * These routes are accessible only to authenticated users with a valid Sanctum token.
+ * They allow for creating, updating, and deleting categories, articles, and tags.
  */
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('categories', CategoryController::class)
