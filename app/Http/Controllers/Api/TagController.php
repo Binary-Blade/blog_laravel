@@ -27,7 +27,7 @@ class TagController extends Controller
         $validateData = $request->validate([
             "name" => "required|string|max:100"
         ]);
-        $validateData['user_id'] = 1;
+        $validateData['user_id'] = $request->user()->id;
 
         return new TagResource(Tag::create($validateData));
     }
