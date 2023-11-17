@@ -49,7 +49,7 @@ class CategoryController extends Controller
             "name" => "required|string|max:50",
         ]);
         // Add the user_id to the validated data array
-        $validatedData['user_id'] = 1;
+        $validatedData['user_id'] = $request->user()->id;
         // Create the category with the merged data
         $category = Category::create($validatedData);
         // Return the new category as a resource
