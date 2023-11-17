@@ -22,6 +22,11 @@ class ArticleController extends Controller
     use CanLoadRelationships;
 
     protected array $relations = ['tags', 'user'];
+
+    public function __construct()
+    {
+        $this->authorizeResource(Article::class, 'article');
+    }
     /**
      * Display a listing of articles for a given category.
      *
