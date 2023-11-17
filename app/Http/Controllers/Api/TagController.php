@@ -11,6 +11,10 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TagController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Tag::class, 'tag');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -22,7 +26,7 @@ class TagController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): TagResource
     {
         $validateData = $request->validate([
             "name" => "required|string|max:100"
