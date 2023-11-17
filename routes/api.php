@@ -49,10 +49,11 @@ Route::post('login', [AuthController::class, 'login']);
  * They allow for creating, updating, and deleting categories, articles, and tags.
  */
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [AuthController::class,'logout']);
     Route::apiResource('categories', CategoryController::class)
         ->except(['index', 'show']);
     Route::apiResource('categories.articles', ArticleController::class)
-        ->except(['index', 'show']);
+        ->scoped()->except(['index', 'show']);
     Route::apiResource('tags', TagController::class)
         ->except(['index', 'show']);
 });
