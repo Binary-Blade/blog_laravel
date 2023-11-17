@@ -57,7 +57,7 @@ class ArticleController extends Controller
         ]);
 
         // Manually setting the user_id and category_id for the article
-        $validatedData['user_id'] = 1;
+        $validatedData['user_id'] = $request->user()->id;
         $validatedData['category_id'] = $request->route('category');
         $articles = Article::create($validatedData);
 
