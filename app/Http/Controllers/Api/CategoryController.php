@@ -20,6 +20,12 @@ class CategoryController extends Controller
     use CanLoadRelationships;
 
     protected array $relations = ['user','articles.user', 'articles', 'articles.tags'];
+
+
+    public function __construct()
+    {
+        $this->authorizeResource(Category::class, 'category');
+    }
     /**
      * Display a listing of the resource.
      *
